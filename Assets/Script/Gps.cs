@@ -27,17 +27,17 @@ public class Gps: MonoBehaviour {
             print("Unable to determine device location");
             yield break;
         } else {
-        	double latitude = Input.location.lastData.latitude;
-        	double longitude = Input.location.lastData.longitude;
-    		WWW results = new WWW("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&sensor=true_or_false"); // 逆ジオコーディング
+            double latitude = Input.location.lastData.latitude;
+            double longitude = Input.location.lastData.longitude;
+            WWW results = new WWW("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&sensor=true_or_false"); // 逆ジオコーディング
 
-    		yield return results;
+            yield return results;
 
-    		var search  = Json.Deserialize(results.text) as IDictionary;
+            var search  = Json.Deserialize(results.text) as IDictionary;
             var result = search["results"] as IList;
             var formatted_address  = result[1] as IDictionary;
             
-		    GameObject.Find("Text").GetComponent<Text>().text = (string)formatted_address["formatted_address"];
+            GameObject.Find("Text").GetComponent<Text>().text = (string)formatted_address["formatted_address"];
         }
         
         Input.location.Stop();
