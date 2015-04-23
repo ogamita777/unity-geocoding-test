@@ -29,15 +29,18 @@ public class Gps: MonoBehaviour {
         } else {
             double latitude = Input.location.lastData.latitude;
             double longitude = Input.location.lastData.longitude;
-            WWW results = new WWW("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&sensor=true_or_false"); // 逆ジオコーディング
+            
+            WWW results = new WWW("http://www.finds.jp/ws/rgeocode.php?json&lat=" + latitude + "&lon=" + longitude); // 逆ジオコーディング
 
             yield return results;
 
             var search  = Json.Deserialize(results.text) as IDictionary;
-            var result = search["results"] as IList;
-            var formatted_address  = result[1] as IDictionary;
-            
-            GameObject.Find("Text").GetComponent<Text>().text = (string)formatted_address["formatted_address"];
+            var result = search["result"] as IDictionary;
+            var prefecture = result["prefecture"] as IDictionary;
+            var municipality = result["municipality"] as IDictionary;
+            string currentPosition = prefecture["pname"] as string + municipality["mname"] as string;
+            Debug.Log(currentPosition);
+            GameObject.Find("Text").GetComponent<Text>().text = currentPosition;
         }
         
         Input.location.Stop();
